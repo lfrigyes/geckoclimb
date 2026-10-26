@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Gecko Climb – Set a new password</title>
+<link rel="icon" href="img/icon.png">
+<style>
+  :root { --bg: #1d1b3a; --card: #2f2c58; --ink: #fbf8ff; --ink2: #cfc9ea; --accent: #7cf29a; --warn: #ff8a5b; --line: #433f7a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 440px; margin: 0 auto; padding: 40px 16px; }
+  .card { background: var(--card); border-radius: 22px; padding: 22px; }
+  h1 { font-size: 24px; margin: 0 0 6px; }
+  p { color: var(--ink2); margin: 6px 0 14px; }
+  label { display: block; font-size: 13px; color: var(--ink2); margin: 12px 0 6px; }
+  input { width: 100%; font: inherit; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+  button { width: 100%; margin-top: 18px; border: 0; border-radius: 16px; height: 52px; font: 700 18px inherit; background: var(--accent); color: #0d3b1d; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .msg { margin-top: 14px; min-height: 22px; } .err { color: var(--warn); } .ok { color: var(--accent); }
+  a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <h1>Set a new password</h1>
+    <p id="intro">Open this page from the link in the password reset email.</p>
+    <form id="f" hidden>
+      <label for="p1">New password (at least 10 characters)</label>
+      <input id="p1" type="password" autocomplete="new-password" minlength="10" required>
+      <label for="p2">Repeat it</label>
+      <input id="p2" type="password" autocomplete="new-password" minlength="10" required>
+      <button id="go" type="submit">Save password</button>
+    </form>
+    <div id="msg" class="msg" role="status" aria-live="polite"></div>
+  </div>
+  <p><a href="index.html">← Gecko Climb</a></p>
+</main>
+<script src="supabase.js"></script>
+<script src="cloud-config.js"></script>
+<script src="reset.js"></script>
+</body>
+</html>
