@@ -1,0 +1,61 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<title>Gecko Climb – Become a tester</title>
+<link rel="icon" href="img/icon.png">
+<style>
+  :root { --bg: #1d1b3a; --card: #2f2c58; --ink: #fbf8ff; --ink2: #cfc9ea; --accent: #7cf29a; --warn: #ff8a5b; --line: #433f7a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 480px; margin: 0 auto; padding: 32px 16px 56px; }
+  .card { background: var(--card); border-radius: 22px; padding: 22px; }
+  img.tex { display: block; width: 120px; margin: 0 auto 8px; }
+  h1 { font-size: 26px; margin: 0 0 6px; text-align: center; }
+  p { color: var(--ink2); margin: 6px 0 14px; }
+  label { display: block; font-size: 13px; color: var(--ink2); margin: 14px 0 6px; }
+  input, select, textarea { width: 100%; font: inherit; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+  .check { display: flex; gap: 10px; align-items: flex-start; font-size: 14px; color: var(--ink2); margin-top: 16px; }
+  .check input { width: 22px; height: 22px; margin: 2px 0 0; flex: none; }
+  button { width: 100%; margin-top: 18px; border: 0; border-radius: 16px; height: 52px; font: 700 18px inherit; background: var(--accent); color: #0d3b1d; cursor: pointer; }
+  button:disabled { opacity: .5; cursor: default; }
+  .msg { margin-top: 14px; min-height: 22px; } .err { color: var(--warn); } .ok { color: var(--accent); }
+  .hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+  a { color: var(--accent); } ul { color: var(--ink2); padding-left: 20px; }
+</style>
+</head>
+<body>
+<main>
+  <div class="card">
+    <img class="tex" src="img/tex.png" alt="Tex, the Gecko Climb gecko, giving a thumbs up">
+    <h1>Help me test Gecko Climb</h1>
+    <p>Gecko Climb is a small hobby project: a climbing tracker with a gecko called Tex, for boulder, top rope and lead. I am looking for friendly
+    climbers to try it before it goes public.</p>
+    <ul>
+      <li>Testers use the app <b>without ads</b>.</li>
+      <li>It takes a couple of weeks of casual use, and I would love to hear what feels off.</li>
+      <li>Android first; an iPhone version comes later.</li>
+    </ul>
+    <form id="f">
+      <label for="email">Your email (the Google account you use on your Android phone works best)</label>
+      <input id="email" type="email" autocomplete="email" maxlength="254" required>
+      <label for="phone">Your phone</label>
+      <select id="phone"><option value="">Choose…</option><option value="android">Android</option><option value="iphone">iPhone</option><option value="both">Both</option></select>
+      <label for="note">Anything you want me to know (optional)</label>
+      <textarea id="note" rows="3" maxlength="300" placeholder="e.g. which gym you climb in"></textarea>
+      <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" tabindex="-1" autocomplete="off"></div>
+      <label class="check"><input id="ok" type="checkbox"><span>I agree that my email is stored to invite me to the test and to write to me about it. I can ask to be removed any time at geckoclimb.app@gmail.com. <a href="privacy.html">Privacy</a></span></label>
+      <button id="go" type="submit">Sign me up</button>
+    </form>
+    <div id="msg" class="msg" role="status" aria-live="polite"></div>
+  </div>
+  <p><a href="index.html">← Gecko Climb</a></p>
+</main>
+<script src="supabase.js"></script>
+<script src="cloud-config.js"></script>
+<script src="testers.js"></script>
+</body>
+</html>
