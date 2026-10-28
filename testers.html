@@ -24,35 +24,38 @@
   button:disabled { opacity: .5; cursor: default; }
   .msg { margin-top: 14px; min-height: 22px; } .err { color: var(--warn); } .ok { color: var(--accent); }
   .hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+  .lang { display: flex; gap: 6px; justify-content: flex-end; margin-bottom: 4px; }
+  .lang button { width: auto; height: 34px; margin: 0; padding: 0 14px; border-radius: 12px; font-size: 14px; background: var(--bg); color: var(--ink2); border: 2px solid var(--line); }
+  .lang button.on { background: var(--accent); color: #0d3b1d; border-color: var(--accent); }
   a { color: var(--accent); } ul { color: var(--ink2); padding-left: 20px; }
 </style>
 </head>
 <body>
 <main>
   <div class="card">
+    <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="en">EN</button><button type="button" data-lang="hu">HU</button></div>
     <img class="tex" src="img/tex.png" alt="Tex, the Gecko Climb gecko, giving a thumbs up">
-    <h1>Help me test Gecko Climb</h1>
-    <p>Gecko Climb is a small hobby project: a climbing tracker with a gecko called Tex, for boulder, top rope and lead. I am looking for friendly
-    climbers to try it before it goes public.</p>
+    <h1 data-t="h1"></h1>
+    <p data-t="intro"></p>
     <ul>
-      <li>Testers use the app <b>without ads</b>.</li>
-      <li>It takes a couple of weeks of casual use, and I would love to hear what feels off.</li>
-      <li>Android first; an iPhone version comes later.</li>
+      <li data-t="li1"></li>
+      <li data-t="li2"></li>
+      <li data-t="li3"></li>
     </ul>
     <form id="f">
-      <label for="email">Your email (the Google account you use on your Android phone works best)</label>
+      <label for="email" data-t="lblEmail"></label>
       <input id="email" type="email" autocomplete="email" maxlength="254" required>
-      <label for="phone">Your phone</label>
-      <select id="phone"><option value="">Choose…</option><option value="android">Android</option><option value="iphone">iPhone</option><option value="both">Both</option></select>
-      <label for="note">Anything you want me to know (optional)</label>
-      <textarea id="note" rows="3" maxlength="300" placeholder="e.g. which gym you climb in"></textarea>
+      <label for="phone" data-t="lblPhone"></label>
+      <select id="phone"><option value="" data-t="optChoose"></option><option value="android" data-t="optAndroid"></option><option value="iphone" data-t="optIphone"></option><option value="both" data-t="optBoth"></option></select>
+      <label for="note" data-t="lblNote"></label>
+      <textarea id="note" rows="3" maxlength="300" data-ph="phNote"></textarea>
       <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" tabindex="-1" autocomplete="off"></div>
-      <label class="check"><input id="ok" type="checkbox"><span>I agree that my email is stored to invite me to the test and to write to me about it. I can ask to be removed any time at geckoclimb.app@gmail.com. <a href="privacy.html">Privacy</a></span></label>
-      <button id="go" type="submit">Sign me up</button>
+      <label class="check"><input id="ok" type="checkbox"><span><span data-t="consent"></span> <a href="privacy.html" data-t="privacy"></a></span></label>
+      <button id="go" type="submit" data-t="go"></button>
     </form>
     <div id="msg" class="msg" role="status" aria-live="polite"></div>
   </div>
-  <p><a href="index.html">← Gecko Climb</a></p>
+  <p><a href="index.html">&larr; Gecko Climb</a></p>
 </main>
 <script src="supabase.js"></script>
 <script src="cloud-config.js"></script>
