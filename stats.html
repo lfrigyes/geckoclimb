@@ -1,0 +1,64 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex, nofollow">
+<title>Gecko Climb – Használat</title>
+<link rel="icon" href="img/icon.png">
+<style>
+  :root { --bg: #1d1b3a; --card: #2f2c58; --ink: #fbf8ff; --ink2: #cfc9ea; --muted: #9b95c2; --accent: #7cf29a; --warn: #ff8a5b; --line: #433f7a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 720px; margin: 0 auto; padding: 24px 16px 48px; }
+  h1 { font-size: 24px; margin: 0 0 4px; } h2 { font-size: 17px; margin: 0 0 10px; }
+  .card { background: var(--card); border-radius: 20px; padding: 18px; margin-top: 14px; }
+  .note { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
+  input { width: 100%; font: inherit; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); margin-top: 8px; }
+  button { font: inherit; cursor: pointer; }
+  .btn { width: 100%; margin-top: 14px; border: 0; border-radius: 16px; height: 50px; font-weight: 700; background: var(--accent); color: #0d3b1d; }
+  .chips { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 12px; }
+  .chip { border: 2px solid var(--line); background: transparent; color: var(--ink2); border-radius: 999px; padding: 6px 14px; font-size: 14px; }
+  .chip.on { border-color: var(--accent); color: var(--ink); }
+  .tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; }
+  @media (min-width: 560px) { .tiles { grid-template-columns: repeat(4, 1fr); } }
+  .tile { background: var(--bg); border-radius: 14px; padding: 12px; }
+  .tile b { display: block; font-size: 26px; font-variant-numeric: tabular-nums; }
+  .tile span { color: var(--ink2); font-size: 13px; }
+  svg { display: block; width: 100%; height: auto; }
+  table { width: 100%; border-collapse: collapse; font-size: 15px; }
+  td { padding: 7px 0; border-bottom: 1px solid var(--line); } td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+  .bar { height: 8px; border-radius: 4px; background: var(--accent); margin-top: 4px; }
+  .err { color: var(--warn); } a { color: var(--accent); }
+</style>
+</head>
+<body>
+<main>
+  <h1>Gecko Climb – Használat</h1>
+  <p class="note">Névtelen számok az appból (nincs benne felhasználó vagy eszközazonosító). Csak a te fiókoddal olvasható.</p>
+  <div id="login" class="card" hidden>
+    <h2>Bejelentkezés</h2>
+    <p class="note">Ugyanaz a fiók, amivel az appba lépsz be.</p>
+    <form id="f"><input id="em" type="email" autocomplete="email" placeholder="email" required>
+      <input id="pw" type="password" autocomplete="current-password" placeholder="jelszó" required>
+      <button class="btn" type="submit">Belépés</button></form>
+  </div>
+  <div id="msg" class="note" role="status" aria-live="polite"></div>
+  <div id="out" hidden>
+    <div class="chips" id="range"></div>
+    <div class="card"><div class="tiles" id="tiles"></div></div>
+    <div class="card"><h2>Napi aktív telefonok</h2><div id="dau"></div><p class="note">Hány telefon nyitotta meg az appot az adott napon.</p></div>
+    <div class="card"><h2>Visszatérés</h2><table id="ret"></table><p class="note">A megnyitások aszerint, hány nappal a telepítés után történtek. Ha a későbbi sorok is nőnek, visszajárnak.</p></div>
+    <div class="card"><h2>Mit csinálnak az appban</h2><table id="ev"></table></div>
+    <div class="card"><h2>Platform</h2><table id="pf"></table></div>
+    <p class="chips"><button class="chip" id="out-btn">Kijelentkezés</button></p>
+  </div>
+  <p><a href="index.html">← Gecko Climb</a></p>
+</main>
+<script src="supabase.js"></script>
+<script src="cloud-config.js"></script>
+<script src="stats.js"></script>
+</body>
+</html>
