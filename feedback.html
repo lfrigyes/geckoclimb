@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="hu">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self' https://*.supabase.co; base-uri 'none'; form-action 'none'; object-src 'none'">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<title>Gecko Climb – Visszajelzés</title>
+<link rel="icon" href="img/icon.png">
+<style>
+  :root { --bg: #1d1b3a; --card: #2f2c58; --ink: #fbf8ff; --ink2: #cfc9ea; --muted: #9b95c2; --accent: #7cf29a; --warn: #ff8a5b; --line: #433f7a; }
+  * { box-sizing: border-box; }
+  body { margin: 0; background: var(--bg); color: var(--ink); font: 17px/1.5 -apple-system, BlinkMacSystemFont, "Segoe UI", system-ui, sans-serif; }
+  main { max-width: 560px; margin: 0 auto; padding: 28px 16px 56px; }
+  .card { background: var(--card); border-radius: 22px; padding: 22px; margin-top: 14px; }
+  img.tex { display: block; width: 104px; margin: 0 auto 6px; }
+  h1 { font-size: 25px; margin: 0 0 6px; text-align: center; }
+  .lead { color: var(--ink2); text-align: center; margin: 4px 0 0; }
+  .time { display: block; width: fit-content; margin: 10px auto 0; padding: 4px 12px; border-radius: 999px; background: var(--bg); color: var(--accent); font-size: 14px; font-weight: 600; }
+  .q { margin: 0 0 4px; font-weight: 650; } .q .opt { color: var(--muted); font-weight: 400; font-size: 14px; }
+  .hint { color: var(--muted); font-size: 14px; margin: 0 0 10px; }
+  textarea, input[type=text] { width: 100%; font: inherit; padding: 12px 14px; border-radius: 14px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); }
+  textarea { min-height: 84px; resize: vertical; }
+  .opts { display: flex; flex-wrap: wrap; gap: 8px; }
+  .opts button { min-height: 44px; padding: 8px 14px; border-radius: 999px; border: 2px solid var(--line); background: var(--bg); color: var(--ink); font: 600 15px inherit; cursor: pointer; }
+  .opts button.on { border-color: var(--accent); background: rgba(124,242,154,.14); color: var(--accent); }
+  .stars { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+  .stars button { padding: 8px 0; font-size: 18px; border-radius: 14px; }
+  .scale { display: grid; grid-template-columns: repeat(11, 1fr); gap: 4px; }
+  .scale button { min-width: 0; padding: 8px 0; border-radius: 10px; font-size: 14px; }
+  .ends { display: flex; justify-content: space-between; color: var(--muted); font-size: 13px; margin-top: 4px; }
+  .go { width: 100%; margin-top: 18px; border: 0; border-radius: 16px; height: 54px; font: 700 18px inherit; background: var(--accent); color: #0d3b1d; cursor: pointer; }
+  .go:disabled { opacity: .5; cursor: default; }
+  .msg { margin-top: 14px; min-height: 22px; text-align: center; } .err { color: var(--warn); } .ok { color: var(--accent); }
+  .hp { position: absolute; left: -9999px; height: 0; overflow: hidden; }
+  .lang { display: flex; gap: 6px; justify-content: flex-end; }
+  .lang button { height: 34px; padding: 0 14px; border-radius: 12px; font-size: 14px; background: var(--bg); color: var(--ink2); border: 2px solid var(--line); cursor: pointer; }
+  .lang button.on { background: var(--accent); color: #0d3b1d; border-color: var(--accent); }
+  .small { color: var(--muted); font-size: 13px; text-align: center; margin-top: 16px; }
+  a { color: var(--accent); }
+  .thanks { text-align: center; } .thanks h2 { margin: 6px 0; }
+  @media (max-width: 380px) { .scale { grid-template-columns: repeat(6, 1fr); } }
+</style>
+</head>
+<body>
+<main>
+  <div class="lang" role="group" aria-label="Language"><button type="button" data-lang="hu">HU</button><button type="button" data-lang="en">EN</button></div>
+  <div id="form">
+    <img class="tex" src="img/tex.png" alt="Tex, a Gecko Climb gekkója">
+    <h1 data-t="h1"></h1>
+    <p class="lead" data-t="lead"></p>
+    <span class="time" data-t="time"></span>
+
+    <div class="card"><p class="q" data-t="q1"></p><div class="opts stars" id="rating"></div></div>
+    <div class="card"><p class="q" data-t="q2"></p><p class="hint" data-t="h2"></p><textarea id="strength" maxlength="800" data-ph="ph2"></textarea></div>
+    <div class="card"><p class="q" data-t="q3"></p><p class="hint" data-t="h3"></p><textarea id="weakness" maxlength="800" data-ph="ph3"></textarea></div>
+    <div class="card"><p class="q"><span data-t="q4"></span> <span class="opt" data-t="multi"></span></p><div class="opts" id="used"></div></div>
+    <div class="card"><p class="q" data-t="q5"></p><div class="opts" id="bug"></div>
+      <textarea id="bug_note" maxlength="800" data-ph="ph5" style="margin-top:10px" hidden></textarea></div>
+    <div class="card"><p class="q" data-t="q6"></p><div class="opts scale" id="recommend"></div><div class="ends"><span data-t="e0"></span><span data-t="e10"></span></div></div>
+    <div class="card"><p class="q" data-t="q7"></p><div class="opts" id="keep"></div></div>
+    <div class="card"><p class="q"><span data-t="q8"></span> <span class="opt" data-t="multi"></span></p><div class="opts" id="kinds"></div>
+      <p class="q" style="margin-top:16px" data-t="q9"></p><div class="opts" id="freq"></div></div>
+    <div class="card"><p class="q"><span data-t="q10"></span> <span class="opt" data-t="optional"></span></p><textarea id="other" maxlength="1500" data-ph="ph10"></textarea>
+      <p class="q" style="margin-top:16px"><span data-t="q11"></span> <span class="opt" data-t="optional"></span></p><input id="name" type="text" maxlength="80" autocomplete="name" data-ph="ph11"></div>
+    <div class="hp" aria-hidden="true"><label for="website">Leave this empty</label><input id="website" tabindex="-1" autocomplete="off"></div>
+    <button class="go" id="go" type="button" data-t="go"></button>
+    <div id="msg" class="msg" role="status" aria-live="polite"></div>
+    <p class="small"><span data-t="anon"></span> <a href="privacy.html" data-t="privacy"></a></p>
+  </div>
+  <div id="done" class="card thanks" hidden>
+    <img class="tex" src="img/tex.png" alt="">
+    <h2 data-t="thx1"></h2>
+    <p class="lead" data-t="thx2"></p>
+  </div>
+</main>
+<script src="supabase.js"></script>
+<script src="cloud-config.js"></script>
+<script src="feedback.js"></script>
+</body>
+</html>

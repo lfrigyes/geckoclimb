@@ -32,6 +32,7 @@
   td { padding: 7px 0; border-bottom: 1px solid var(--line); } td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
   .bar { height: 8px; border-radius: 4px; background: var(--accent); margin-top: 4px; }
   .err { color: var(--warn); } a { color: var(--accent); }
+  .fb { border-top: 1px solid var(--line); padding: 12px 0; } .fb b { color: var(--accent); } .fb p { margin: 4px 0; }
 </style>
 </head>
 <body>
@@ -53,6 +54,8 @@
     <div class="card"><h2>Visszatérés</h2><table id="ret"></table><p class="note">A megnyitások aszerint, hány nappal a telepítés után történtek. Ha a későbbi sorok is nőnek, visszajárnak.</p></div>
     <div class="card"><h2>Mit csinálnak az appban</h2><table id="ev"></table></div>
     <div class="card"><h2>Platform</h2><table id="pf"></table></div>
+    <h2 style="margin:28px 0 0">Tesztelői visszajelzések</h2>
+    <div class="card"><div class="tiles" id="fbtiles"></div><div id="fblist"></div><p class="note">A feedback.html kérdőív válaszai, a legújabb elöl.</p></div>
     <h2 style="margin:28px 0 0">Idő</h2>
     <div class="card"><h2>Mennyi időt töltenek egy fülön</h2><table id="tabtime"></table><p class="note">Egy-egy fülre nézés hossza, sávokban (pl. 1–5 perc). Fal = a fal és a mászóképernyő.</p></div>
     <div class="card"><h2>Egy alkalom hossza</h2><table id="sess"></table><p class="note">Egy alkalom = az app előtérben, az 5 percnél rövidebb szünetek nem bontják ketté. Az alkalom a következő megnyitáskor számolódik be.</p></div>

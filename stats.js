@@ -20,7 +20,8 @@
     $("login").hidden = true; say("Betöltés…");
     const {data: r, error} = await sb.rpc("usage_summary", {days: 400});
     if (error) { say(error.message === "not allowed" ? "Ez a fiók nem láthatja a statisztikát." : error.message, "err"); return; }
-    data = r; say(""); $("out").hidden = false; draw();
+    const {data: fb} = await sb.rpc("feedback_list");
+    data = r; data.feedback = fb || []; say(""); $("out").hidden = false; draw();
   }
   function draw() {
     $("range").replaceChildren(...[[7, "7 nap"], [30, "30 nap"], [90, "90 nap"]].map(([d, t]) =>
@@ -40,6 +41,7 @@
     table("ev", EVENTS.map(([e, t]) => [t, sum(e)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]), "Még nincs adat ebben az időszakban.");
     const pf = {}; rows.filter(r => r.event === "open").forEach(r => pf[r.platform] = (pf[r.platform] || 0) + r.n);
     table("pf", Object.entries(pf).map(([p, n]) => [{android: "Android", ios: "iPhone", web: "Web"}[p] || p, n]), "Még nincs adat.");
+    feedback(data.feedback || []);
     // 1.0.3 measures: every one a count per band or kind
     const by = (ev, labels, order) => { const m = {}; rows.filter(r => r.event === ev).forEach(r => m[r.bucket] = (m[r.bucket] || 0) + r.n);
       const keys = order || Object.keys(m).sort((a, b) => m[b] - m[a]); return keys.filter(k => m[k]).map(k => [(labels && labels[k]) || k || "–", m[k]]); };
@@ -68,6 +70,21 @@
     table("lang", by("lang", {hu: "Magyar", en: "Angol"}), NONE);
     const K = {boulder: "Boulder", toprope: "Top rope", lead: "Lead"};
     table("kinds", Object.keys(K).map(k => [K[k], sum("climb_try", r => r.bucket === k) + sum("climb_send", r => r.bucket === k)]).filter(x => x[1] > 0), NONE);
+  }
+  function feedback(list) {  // the tester survey: averages on top, then every answer
+    const avg = k => { const v = list.map(x => x[k]).filter(x => x != null); return v.length ? (v.reduce((a, b) => a + b, 0) / v.length).toFixed(1) : "–"; };
+    const rec = list.map(x => x.recommend).filter(x => x != null), nps = rec.length ? Math.round(100 * (rec.filter(x => x >= 9).length - rec.filter(x => x <= 6).length) / rec.length) : "–";
+    const keep = list.filter(x => x.keep === "yes").length;
+    $("fbtiles").replaceChildren(...[[list.length, "Válasz"], [avg("rating") + " ★", "Átlag értékelés"], [nps, "Ajánlási pont (NPS)"], [`${keep}/${list.length}`, "Használná tovább"]]
+      .map(([v, t]) => el("div", {className: "tile"}, el("b", {textContent: v}), el("span", {textContent: t}))));
+    const L = {wall: "falra rögzítés", climb: "mászóképernyő", stats: "statisztika", muscle: "izomterhelés", account: "fiók", filter: "szűrés", notes: "jegyzet"};
+    $("fblist").replaceChildren(...(list.length ? list.map(x => el("div", {className: "fb"},
+      el("div", {className: "note", textContent: `${(x.created_at || "").slice(0, 10)} · ${"★".repeat(x.rating)} · ajánlás ${x.recommend ?? "–"}/10 · tovább: ${({yes: "igen", maybe: "talán", no: "nem"})[x.keep] || "–"}${x.name ? " · " + x.name : ""}`}),
+      el("p", {}, el("b", {textContent: "+ "}), x.strength), el("p", {}, el("b", {textContent: "− ", style: "color:var(--warn)"}), x.weakness),
+      x.bug === "yes" ? el("p", {className: "err", textContent: "Hiba: " + (x.bug_note || "(nem írta le)")}) : "",
+      x.other ? el("p", {textContent: "Más: " + x.other}) : "",
+      el("div", {className: "note", textContent: [(x.used || []).map(u => L[u] || u).join(", "), (x.kinds || []).join(", "), ({lt1: "ritkábban mint hetente", "1": "heti 1", "2-3": "heti 2–3", "4+": "heti 4+"})[x.freq] || ""].filter(Boolean).join(" · ")})))
+      : [el("p", {className: "note", textContent: "Még nincs válasz."})]));
   }
   function table(id, list, empty) {
     const max = Math.max(1, ...list.map(x => x[1]));
