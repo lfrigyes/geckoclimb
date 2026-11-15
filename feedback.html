@@ -40,6 +40,7 @@
   .small { color: var(--muted); font-size: 13px; text-align: center; margin-top: 16px; }
   a { color: var(--accent); }
   .thanks { text-align: center; } .thanks h2 { margin: 6px 0; }
+  .play { display: block; margin: 14px auto 0; max-width: 340px; padding: 14px 18px; border-radius: 16px; background: var(--accent); color: #0d3b1d; font-weight: 700; text-decoration: none; }
   @media (max-width: 380px) { .scale { grid-template-columns: repeat(6, 1fr); } }
 </style>
 </head>
@@ -73,6 +74,9 @@
     <img class="tex" src="img/tex.png" alt="">
     <h2 data-t="thx1"></h2>
     <p class="lead" data-t="thx2"></p>
+    <p class="lead" style="margin-top:18px" data-t="play1"></p>
+    <a class="play" id="play" href="https://play.google.com/store/apps/details?id=app.geckoclimb.tex" target="_blank" rel="noopener" data-t="play2"></a>
+    <p class="small" data-t="play3"></p>
   </div>
 </main>
 <script src="supabase.js"></script>

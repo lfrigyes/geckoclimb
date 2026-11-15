@@ -24,7 +24,9 @@
       go: "Küldés", anon: "Névtelen: az e-mail-címed nem kerül tárolásra, csak a válaszaid.", privacy: "Adatvédelem",
       need1: "Kérlek, adj egy csillagos értékelést.", need2: "Kérlek, írj egy erősséget és egy gyengeséget (egy mondat is elég).",
       saving: "Küldés…", fail: "Hiba történt. Próbáld újra egy perc múlva.", off: "A kérdőív most nem érhető el. Nézz vissza hamarosan.",
-      thx1: "Köszönöm! 🦎", thx2: "Megkaptam a válaszaidat. Sokat segítesz vele, hogy a Gecko Climb jobb legyen, mire mindenki letöltheti."
+      thx1: "Köszönöm! 🦎", thx2: "Megkaptam a válaszaidat. Sokat segítesz vele, hogy a Gecko Climb jobb legyen, mire mindenki letöltheti.",
+      play1: "Még egy apró kérés: ha van egy perced, értékeld az appot a Play Áruházban is. Egy őszinte csillagozás és pár szó sokat segít, hogy más mászók is megtalálják.",
+      play2: "⭐ Értékelés a Play Áruházban", play3: "Az áruházi oldalon görgess le az „Értékelje az alkalmazást” részhez."
     },
     en: {
       title: "Gecko Climb – Feedback", h1: "How was Gecko Climb?",
@@ -44,7 +46,9 @@
       go: "Send", anon: "Anonymous: your email is not stored, only your answers.", privacy: "Privacy",
       need1: "Please give a star rating.", need2: "Please write one strength and one weakness (one sentence is enough).",
       saving: "Sending…", fail: "Something went wrong. Please try again in a minute.", off: "The form is not available right now. Please check back soon.",
-      thx1: "Thank you! 🦎", thx2: "Your answers are in. They help a lot to make Gecko Climb better before everyone can download it."
+      thx1: "Thank you! 🦎", thx2: "Your answers are in. They help a lot to make Gecko Climb better before everyone can download it.",
+      play1: "One more small ask: if you have a minute, please rate the app on Google Play too. An honest rating and a few words help other climbers find it.",
+      play2: "⭐ Rate it on Google Play", play3: "On the store page, scroll down to “Rate this app”."
     }
   };
   const guess = () => /^hu/i.test(navigator.language || "") ? "hu" : "en";
