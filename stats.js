@@ -7,7 +7,7 @@
   if (!cfg.url || !cfg.anonKey || !window.supabase) return say("A felhő nincs beállítva.", "err");
   const sb = window.supabase.createClient(cfg.url, cfg.anonKey, {auth: {persistSession: true, autoRefreshToken: true, detectSessionInUrl: false}});
   const EVENTS = [["climb_send", "Toppolt mászás"], ["climb_try", "Sikertelen próba"], ["line_add", "Új út felvéve"], ["line_edit", "Út szerkesztve"],
-    ["line_archive", "Út leszedve"], ["gym_add", "Új terem"], ["undo", "Próba törölve"], ["tab_stats", "Statisztika fül megnyitva"],
+    ["line_archive", "Út leszedve"], ["gym_add", "Új terem"], ["undo", "Próba visszavonva / törölve"], ["tab_stats", "Statisztika fül megnyitva"],
     ["tab_account", "Fiók fül megnyitva"], ["signup", "Regisztráció elindítva"], ["signin", "Bejelentkezés"], ["backup_save", "Mentés fájlba"], ["backup_restore", "Mentés visszatöltve"]];
   const BUCKETS = [["0", "Telepítés napján"], ["1", "1 nappal utána"], ["2-7", "2–7 nappal utána"], ["8-30", "8–30 nappal utána"], ["31+", "31+ nappal utána"]];
   let days = 30, data = null;
@@ -40,6 +40,34 @@
     table("ev", EVENTS.map(([e, t]) => [t, sum(e)]).filter(x => x[1] > 0).sort((a, b) => b[1] - a[1]), "Még nincs adat ebben az időszakban.");
     const pf = {}; rows.filter(r => r.event === "open").forEach(r => pf[r.platform] = (pf[r.platform] || 0) + r.n);
     table("pf", Object.entries(pf).map(([p, n]) => [{android: "Android", ios: "iPhone", web: "Web"}[p] || p, n]), "Még nincs adat.");
+    // 1.0.3 measures: every one a count per band or kind
+    const by = (ev, labels, order) => { const m = {}; rows.filter(r => r.event === ev).forEach(r => m[r.bucket] = (m[r.bucket] || 0) + r.n);
+      const keys = order || Object.keys(m).sort((a, b) => m[b] - m[a]); return keys.filter(k => m[k]).map(k => [(labels && labels[k]) || k || "–", m[k]]); };
+    const NONE = "Még nincs adat (az 1.0.3-tól mérjük).";
+    const T = {lt10s: "10 mp alatt", "10-60s": "10–60 mp", "1-5m": "1–5 perc", "5m+": "5 perc felett"}, TO = Object.keys(T);
+    table("tabtime", [["wall", "Fal"], ["stats", "Statisztika"], ["account", "Fiók"]].flatMap(([v, n]) => by("time_" + v, T, TO).map(([b, c]) => [`${n}: ${b}`, c])), NONE);
+    const SE = {lt1m: "1 perc alatt", "1-5m": "1–5 perc", "5-15m": "5–15 perc", "15-60m": "15–60 perc", "60m+": "1 óra felett"};
+    table("sess", by("session", SE, Object.keys(SE)), NONE);
+    const SV = {"0": "0 mentés", "1": "1", "2-3": "2–3", "4-7": "4–7", "8-15": "8–15", "16+": "16 vagy több"};
+    table("sesssaves", by("session_saves", SV, Object.keys(SV)), NONE);
+    table("consent", by("ad_consent"), NONE);
+    table("full", by("ad_full", {shown: "Megjelent", not_ready: "Nem töltött be időben", fail: "Megjelenítés hiba", load_fail: "Betöltési hiba"}), NONE);
+    table("banner", by("ad_banner", {shown: "Megjelent (indításonként)", fail: "Hiba"}), NONE);
+    table("feat", [["filter_open", "Szűrő megnyitva"], ["note_save", "Jegyzet mentve"], ["invite_share", "Meghívókód megosztva"], ["demo_seen", "Minta-statisztikát látta"],
+      ["first_try", "Első próba valaha"]].map(([e, t]) => [t, sum(e)]).concat(by("invite_used", {ok: "ok", unknown: "nem létező", self: "saját", already: "már volt", too_old: "régi fiók"}).map(([b, n]) => [`Meghívókód beváltás: ${b}`, n]))
+      .concat([["Első próba a minta-statisztika után", sum("first_try", r => r.bucket === "demo")]]).filter(x => x[1] > 0), NONE);
+    table("filt", by("filter_use", {sent: "Megmászva", open: "Még nincs meg", new: "Még nem próbált", all: "Mind", grade: "Fokozat", slab: "Lejtő", vertical: "Függőleges",
+      overhang: "Túlhajló", boulder: "Boulder", toprope: "Top rope", lead: "Lead", sort_number: "Rendezés: szám", sort_last: "Rendezés: legutóbb mászott",
+      sort_added: "Rendezés: legújabb", sort_hard: "Rendezés: legnehezebb", sort_easy: "Rendezés: legkönnyebb", reset: "Alaphelyzet"}), NONE);
+    table("skind", by("stat_kind", {all: "Minden típus", boulder: "Boulder", toprope: "Top rope", lead: "Lead"}), NONE);
+    const opened = sum("climb_open"), savedN = sum("climb_try", r => r.bucket) + sum("climb_send", r => r.bucket);
+    table("funnel", opened ? [["Mászóképernyő megnyitva", opened], ["Ebből mentve", savedN], ["Mentés nélkül bezárva", Math.max(0, opened - savedN)],
+      ["Visszavonás a felugró sávból", Math.max(0, sum("undo") - sum("try_delete"))], ["Próba törölve a listából", sum("try_delete")]] : [], NONE);
+    table("errs", by("js_error").map(([b, n]) => [`Hiba: ${b}`, n]).concat(sum("sync_fail") ? [["Felhő-szinkron sikertelen", sum("sync_fail")]] : []), "Nincs hiba. 🎉");
+    table("start", by("start", {lt1s: "1 mp alatt", "1-2s": "1–2 mp", "2-4s": "2–4 mp", "4s+": "4 mp felett"}, ["lt1s", "1-2s", "2-4s", "4s+"]), NONE);
+    table("lang", by("lang", {hu: "Magyar", en: "Angol"}), NONE);
+    const K = {boulder: "Boulder", toprope: "Top rope", lead: "Lead"};
+    table("kinds", Object.keys(K).map(k => [K[k], sum("climb_try", r => r.bucket === k) + sum("climb_send", r => r.bucket === k)]).filter(x => x[1] > 0), NONE);
   }
   function table(id, list, empty) {
     const max = Math.max(1, ...list.map(x => x[1]));
