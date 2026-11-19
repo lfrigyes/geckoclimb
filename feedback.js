@@ -1,6 +1,6 @@
 /* Gecko Climb: tester feedback form, in Hungarian and English (the phone's language picks the start; HU / EN switches it).
    Adds one row to "app_feedback" with the public key (insert only; see mobile/supabase-feedback.sql). No email or id is
-   stored; the name is optional and only for a reply. About 3 minutes: one star rating, one strength, one weakness,
+   stored and no name is asked. About 3 minutes: one star rating, one strength, one weakness,
    and a few taps. */
 "use strict";
 (() => {
@@ -20,7 +20,6 @@
       q7: "Használnád tovább a teszt után is?", k_yes: "Igen", k_maybe: "Talán", k_no: "Nem",
       q8: "Mit mászol?", q9: "Milyen gyakran mászol?", f_lt1: "Ritkábban, mint hetente", f_1: "Heti 1", "f_2-3": "Heti 2–3", "f_4+": "Heti 4+",
       q10: "Bármi más, amit elmondanál", ph10: "ötlet, kérés, bármi",
-      q11: "A neved, ha szeretnéd, hogy visszaírjak", ph11: "pl. Anna",
       go: "Küldés", anon: "Névtelen: az e-mail-címed nem kerül tárolásra, csak a válaszaid.", privacy: "Adatvédelem",
       need1: "Kérlek, adj egy csillagos értékelést.", need2: "Kérlek, írj egy erősséget és egy gyengeséget (egy mondat is elég).",
       saving: "Küldés…", fail: "Hiba történt. Próbáld újra egy perc múlva.", off: "A kérdőív most nem érhető el. Nézz vissza hamarosan.",
@@ -42,7 +41,6 @@
       q7: "Would you keep using it after the test?", k_yes: "Yes", k_maybe: "Maybe", k_no: "No",
       q8: "What do you climb?", q9: "How often do you climb?", f_lt1: "Less than weekly", f_1: "Once a week", "f_2-3": "2–3 times a week", "f_4+": "4+ times a week",
       q10: "Anything else you would like to tell me", ph10: "an idea, a wish, anything",
-      q11: "Your name, if you would like a reply", ph11: "e.g. Anna",
       go: "Send", anon: "Anonymous: your email is not stored, only your answers.", privacy: "Privacy",
       need1: "Please give a star rating.", need2: "Please write one strength and one weakness (one sentence is enough).",
       saving: "Sending…", fail: "Something went wrong. Please try again in a minute.", off: "The form is not available right now. Please check back soon.",
@@ -103,7 +101,7 @@
     $("go").disabled = true; say("saving");
     const row = {lang, rating: A.rating, strength: strength.slice(0, 800), weakness: weakness.slice(0, 800), used: A.used, bug: A.bug,
       bug_note: A.bug === "yes" ? ($("bug_note").value.trim().slice(0, 800) || null) : null, recommend: A.recommend, keep: A.keep,
-      kinds: A.kinds, freq: A.freq, other: $("other").value.trim().slice(0, 1500) || null, name: $("name").value.trim().slice(0, 80) || null};
+      kinds: A.kinds, freq: A.freq, other: $("other").value.trim().slice(0, 1500) || null};
     const {error} = await sb.from("app_feedback").insert(row, {returning: "minimal"});
     if (error) { $("go").disabled = false; return say("fail", "err"); }
     $("form").hidden = true; $("done").hidden = false; scrollTo(0, 0);

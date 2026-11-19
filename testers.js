@@ -6,24 +6,22 @@
   const $ = id => document.getElementById(id), cfg = window.GECKO_CLOUD || {};
   const T = {
     en: {
-      title: "Gecko Climb – Become a tester", h1: "Help me test Gecko Climb",
-      intro: "Gecko Climb is a small hobby project: a climbing tracker with a gecko called Tex, for boulder, top rope and lead. I am looking for friendly climbers to try it before it goes public.",
-      li1: "Testers use the app without ads.", li2: "It takes a couple of weeks of casual use, and I would love to hear what feels off.", li3: "Android only for now; an iPhone version may come later.",
-      lblEmail: "Your email (the Google account you use on your Android phone works best)", lblPhone: "Your phone", optChoose: "Choose…", optAndroid: "Android", optIphone: "iPhone", optBoth: "Both",
-      lblNote: "Anything you want me to know (optional)", phNote: "e.g. which gym you climb in",
+      title: "Gecko Climb – Join the testers", h1: "Last call: join the Gecko Climb testers",
+      intro: "Gecko Climb is a free climbing log (boulder, top rope and lead) with a gecko called Tex. It will soon be open to everyone, so this is the last chance to join the tester team, and it is a community app: you help shape it.",
+      li1: "The app stays free. Testers climb without ads.", li2: "Enter your email below and I will send you a message shortly, with a button to download the app.", li3: "Android only for now; an iPhone version may come later.",
+      lblEmail: "Your email (the Google account you use on your Android phone works best)",
       consent: "I agree that my email is stored to invite me to the test and to write to me about it. I can ask to be removed any time at geckoclimb.app@gmail.com.", privacy: "Privacy", go: "Sign me up",
       off: "The sign-up is not switched on yet. Please check back soon.", hp: "Thanks! You are on the list.", bad: "That email address does not look right.",
-      tick: "Please tick the box so we may email you about the test.", saving: "Saving…", fail: "Something went wrong. Please try again in a minute.", done: "Thanks! You are on the list. I will email you when the test opens."
+      tick: "Please tick the box so we may email you about the test.", saving: "Saving…", fail: "Something went wrong. Please try again in a minute.", done: "Thanks! You are on the list. I will email you shortly with a button to download the app."
     },
     hu: {
-      title: "Gecko Climb – Légy tesztelő", h1: "Segíts tesztelni a Gecko Climb appot",
-      intro: "A Gecko Climb egy kis hobbiprojekt: mászásnaplózó app Tex, a gekkó társaságában, boulderhez, top ropehoz és leadhez. Barátságos mászókat keresek, akik kipróbálják, mielőtt nyilvános lesz.",
-      li1: "A tesztelők hirdetések nélkül használhatják az appot.", li2: "Pár hét alkalmi használatról van szó, és szívesen hallom, mi nem tetszik.", li3: "Egyelőre csak Androidra; az iPhone-os verzió később jöhet.",
-      lblEmail: "Az e-mail-címed (a legjobb az a Google-fiók, amit az Android-telefonodon használsz)", lblPhone: "A telefonod", optChoose: "Válassz…", optAndroid: "Android", optIphone: "iPhone", optBoth: "Mindkettő",
-      lblNote: "Bármi, amit tudnom érdemes (nem kötelező)", phNote: "pl. melyik teremben mászol",
+      title: "Gecko Climb – Légy tesztelő", h1: "Utolsó hívás: légy a Gecko Climb tesztelője",
+      intro: "A Gecko Climb egy ingyenes mászásnapló (boulder, top rope és lead) Tex, a gekkó társaságában. Hamarosan mindenkinek elérhető lesz, ezért ez az utolsó lehetőség, hogy bekerülj a tesztelői csapatba. Ez egy közösségi app: te is alakíthatod.",
+      li1: "Az app végig ingyenes. A tesztelők hirdetések nélkül másznak.", li2: "Írd be lent az e-mail-címedet, és rövidesen írok egy e-mailt egy gombbal, amivel letöltheted az appot.", li3: "Egyelőre csak Androidra; az iPhone-os verzió később jöhet.",
+      lblEmail: "Az e-mail-címed (a legjobb az a Google-fiók, amit az Android-telefonodon használsz)",
       consent: "Hozzájárulok, hogy az e-mail-címemet eltárolják, hogy meghívjanak a tesztre és írjanak nekem róla. Bármikor kérhetem a törlést a geckoclimb.app@gmail.com címen.", privacy: "Adatvédelem", go: "Jelentkezem",
       off: "A jelentkezés még nincs bekapcsolva. Nézz vissza hamarosan.", hp: "Köszi! Fent vagy a listán.", bad: "Ez az e-mail-cím nem tűnik érvényesnek.",
-      tick: "Kérlek, jelöld be a négyzetet, hogy írhassunk neked a tesztről.", saving: "Mentés…", fail: "Hiba történt. Próbáld újra egy perc múlva.", done: "Köszi! Fent vagy a listán. Írok, amikor indul a teszt."
+      tick: "Kérlek, jelöld be a négyzetet, hogy írhassunk neked a tesztről.", saving: "Mentés…", fail: "Hiba történt. Próbáld újra egy perc múlva.", done: "Köszi! Fent vagy a listán. Rövidesen írok egy e-mailt egy gombbal, amivel letöltheted az appot."
     }
   };
   const guess = () => /^hu/i.test(navigator.language || "") ? "hu" : "en";
@@ -51,7 +49,7 @@
     if (!/^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(email) || email.length > 254) return say("bad", "err");
     if (!$("ok").checked) return say("tick", "err");
     $("go").disabled = true; say("saving");
-    const {error} = await sb.from("tester_signups").insert({email, phone: $("phone").value || null, note: $("note").value.trim().slice(0, 300) || null}, {returning: "minimal"});
+    const {error} = await sb.from("tester_signups").insert({email},{returning: "minimal"});
     if (error && error.code !== "23505") { $("go").disabled = false; return say("fail", "err"); }
     $("f").hidden = true; say("done", "ok");
   });

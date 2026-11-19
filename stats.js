@@ -57,6 +57,8 @@
     table("banner", by("ad_banner", {shown: "Megjelent (indításonként)", fail: "Hiba"}), NONE);
     table("feat", [["filter_open", "Szűrő megnyitva"], ["note_save", "Jegyzet mentve"], ["invite_share", "Meghívókód megosztva"], ["demo_seen", "Minta-statisztikát látta"],
       ["first_try", "Első próba valaha"]].map(([e, t]) => [t, sum(e)]).concat(by("invite_used", {ok: "ok", unknown: "nem létező", self: "saját", already: "már volt", too_old: "régi fiók"}).map(([b, n]) => [`Meghívókód beváltás: ${b}`, n]))
+      .concat(by("share_open", {climb: "egy út", day: "egy nap"}).map(([b, n]) => [`Megosztókép megnyitva: ${b}`, n]))
+      .concat(by("share_send", {card: "kártya", clear: "átlátszó"}).map(([b, n]) => [`Megosztókép elküldve: ${b}`, n]))
       .concat([["Első próba a minta-statisztika után", sum("first_try", r => r.bucket === "demo")]]).filter(x => x[1] > 0), NONE);
     table("filt", by("filter_use", {sent: "Megmászva", open: "Még nincs meg", new: "Még nem próbált", all: "Mind", grade: "Fokozat", slab: "Lejtő", vertical: "Függőleges",
       overhang: "Túlhajló", boulder: "Boulder", toprope: "Top rope", lead: "Lead", sort_number: "Rendezés: szám", sort_last: "Rendezés: legutóbb mászott",
