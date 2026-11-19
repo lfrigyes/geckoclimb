@@ -15,7 +15,7 @@
       tick: "Please tick the box so we may email you about the test.", saving: "Saving…", fail: "Something went wrong. Please try again in a minute.", done: "Thanks! You are on the list. I will email you shortly with a button to download the app."
     },
     hu: {
-      title: "Gecko Climb – Légy tesztelő", h1: "Utolsó hívás: légy a Gecko Climb tesztelője",
+      title: "Gecko Climb – Légy tesztelő", h1: "Utolsó esély: légy a Gecko Climb tesztelője",
       intro: "A Gecko Climb egy ingyenes mászásnapló (boulder, top rope és lead) Tex, a gekkó társaságában. Hamarosan mindenkinek elérhető lesz, ezért ez az utolsó lehetőség, hogy bekerülj a tesztelői csapatba. Ez egy közösségi app: te is alakíthatod.",
       li1: "Az app végig ingyenes. A tesztelők hirdetések nélkül másznak.", li2: "Írd be lent az e-mail-címedet, és rövidesen írok egy e-mailt egy gombbal, amivel letöltheted az appot.", li3: "Egyelőre csak Androidra; az iPhone-os verzió később jöhet.",
       lblEmail: "Az e-mail-címed (a legjobb az a Google-fiók, amit az Android-telefonodon használsz)",
